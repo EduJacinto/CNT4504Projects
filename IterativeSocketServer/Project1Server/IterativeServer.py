@@ -73,7 +73,7 @@ def perform_operation(op):
 def spin_up():
 	with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 		s.bind(('0.0.0.0', 2998))
-		print(f"socket bound")
+		print(f"socket bound to port {2998}")
 		s.listen(25)
 		print(f"server listening to Host:{s.getsockname}")
 
