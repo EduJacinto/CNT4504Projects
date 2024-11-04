@@ -6,6 +6,7 @@
 # Turn-around Time - elapsed time for each client request
 # Total turn-around time - the sum of the turn-around times for all of the client requests
 # Average turn-around time - total turn-around time divided by number of client requests
+# for testing purposes
 import socket
 import threading
 import time
