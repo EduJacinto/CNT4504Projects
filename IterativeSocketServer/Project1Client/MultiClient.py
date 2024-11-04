@@ -11,15 +11,15 @@ import socket
 import threading
 import time
 
-HOST = '139.62.210.155'
+# HOST = '139.62.210.155'
 
 
-def client_session(port, request, client_id, results):
+def client_session(host, port, request, client_id, results):
     try:
         # create the socket for each client
         s = socket.socket()
-        s.connect((HOST, port))
-        print(f"Connected to server at host {HOST} and port {port}")
+        s.connect((host, port))
+        print(f"Connected to server at host {host} and port {port}")
         # clock the time when this is session is started
         start_time = time.time()
         # send request to the server
@@ -39,14 +39,15 @@ def client_session(port, request, client_id, results):
 
 
 def client_request():
-    port = input("Specify which port to connect to: ")
-    # s = socket.socket()
-    # s.connect((HOST, port))
-    # print("Connected to Host: {HOST} via Port:{port}")
-    # print(s.recv(1024))
+    host = input("Enter host IP: ")
+    port = int( input("Specify which port to connect to: ") )
+    s = socket.socket()
+    s.connect((host, port))
+    print(f"Connected to Host: {host} via Port:{port}")
+    print(s.recv(1024))
 
     # continue collecting requests while true
-    request = 1
+    # request = 1
     while True:
         # continue prompting for request while request is invalid
         while True:
@@ -57,7 +58,7 @@ def client_request():
 
                 if request in (1, 2, 3, 4, 5, 6, 7):
                     break
-            except ValueError:
+            except ValueError: # if not in set of acceptable values, catch the error and recover, print error message
                 print("Invalid request")
         # if request is 7 finish program
         if request == 7:
@@ -71,7 +72,7 @@ def client_request():
                 # if valid num clients break out of the loop and continue
                 if client_numbers in (1, 5, 10, 15, 20, 25):
                     break
-            except ValueError:
+            except ValueError: # catch and recover if request not in set of acceptable values
                 print("Invalid number of clients")
         # END COLLECTING REQUEST PARAMETERS
         # thread will collect thread objects and results will collect the turn around time of each thread
@@ -81,7 +82,7 @@ def client_request():
         # create a new thread for each client
         for i in range(client_numbers):
             # this is where each thread is sent to the above function and thus to the server
-            thread = threading.Thread(target=client_session, args=(port, request, i+1, results))
+            thread = threading.Thread(target=client_session, args=(host, port, request, i+1, results))
             threads.append(thread)
             thread.start()
         # make the program wait for all the threads to finish

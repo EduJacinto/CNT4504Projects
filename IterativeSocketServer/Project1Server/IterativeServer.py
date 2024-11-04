@@ -70,12 +70,12 @@ def perform_operation(op):
 		return "invalid request".encode()
 
 
-def spin_server():
+def spin_up():
 	with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-		s.bind((HOST, ''))
-		print(f"socket bound to {HOST}")
+		s.bind(('0.0.0.0', 2998))
+		print(f"socket bound")
 		s.listen(25)
-		print(f"server listening to Host:{HOST}")
+		print(f"server listening to Host:{s.getsockname}")
 
 		while True:
 			print("Waiting for connection request")
@@ -96,5 +96,5 @@ def spin_server():
 
 
 if __name__ == "__main__":
-	spin_server()
+	spin_up()
 
