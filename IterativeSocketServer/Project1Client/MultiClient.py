@@ -18,6 +18,7 @@ def client_session(host, port, request, client_id, results):
     try:
         # create the socket for each client
         s = socket.socket()
+        s.settimeout(5)
         s.connect((host, port))
         print(f"Connected to server at host {host} and port {port}")
         # clock the time when this is session is started
@@ -25,19 +26,24 @@ def client_session(host, port, request, client_id, results):
         # send request to the server
         s.send(str(request).encode())
 
-        # receive the response from the server
-        response = s.recv(1024)
-        end_time = time.time()
-        if response:
-            print(f"client {client_id} received response from server:", response.decode())
-        else:
-            print(f"Client{client_id} did not recieve a response from the server.")
-            
-        turnaround_time = end_time - start_time
-        results.append(turnaround_time)
+        try:
+            # receive the response from the server
+            response = s.recv(4096)
+            end_time = time.time()
+            if response:
+                print(f"client {client_id} received response from server:", response.decode())
+            else:
+                print(f"Client{client_id} did not recieve a response from the server.")
+
+            turnaround_time = end_time - start_time
+            results.append(turnaround_time)
+
+        except socket.timeout:
+            print(f"Client {client_id} timed out waiting for server")
 
     except socket.gaierror as e:
         print(f"Client {client_id} encountered Error: {e}")
+
     finally:
         s.close()
 
