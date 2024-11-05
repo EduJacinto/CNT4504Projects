@@ -28,7 +28,11 @@ def client_session(host, port, request, client_id, results):
         # receive the response from the server
         response = s.recv(1024)
         end_time = time.time()
-        print("client received response from server")
+        if response:
+            print(f"client {client_id} received response from server:", response.decode())
+        else:
+            print(f"Client{client_id} did not recieve a response from the server.")
+            
         turnaround_time = end_time - start_time
         results.append(turnaround_time)
 
