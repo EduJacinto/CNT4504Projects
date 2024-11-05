@@ -75,24 +75,33 @@ def spin_up():
 		s.bind(('0.0.0.0', 2998))
 		print(f"socket bound to port {2998}")
 		s.listen(25)
-		print(f"server listening to Host:{s.getsockname}")
+		# host_address = socket.gethostbyname(socket.gethostname())
 
 		while True:
-			print("Waiting for connection request")
+			print("Waiting for connection request...")
 			client_socket, client_address = s.accept()
+			print(f"Connection from:{client_address}")
+
 
 			with client_socket:
-				print(f"connection from:{client_address}")
-				connection_msg = 'Client successfully connected to Server'
+				connection_msg = "Client successfully connected to Server"
 				client_socket.send(connection_msg.encode())
 
-				request = int(client_socket.recv(1024).decode())
+				request = client_socket.recv(1024)
 				if not request:
 					print("Client disconnected")
 					continue
 
-				response = perform_operation(request)
+				try:
+					op = int(request.decode())
+					print(f"Received operation request: {op}")
+					response = perform_operation(op)
+				except ValueError:
+					response = "Invalid request format".encode()
+					print("Receieved invalid request format")
+
 				client_socket.sendall(response)
+				print("Response sent to the client")
 
 
 if __name__ == "__main__":
