@@ -23,7 +23,7 @@ def perform_operation(op):
 	result = ""
 	if op == 1:
 		try:
-			result = subprocess.check_output(["date"], text=True)
+			result = subprocess.check_output(["date"], universal_newlines=True)
 			return result.encode()
 		except subprocess.SubprocessError as e:
 			result = f"Error: {e}"
@@ -31,7 +31,7 @@ def perform_operation(op):
 
 	elif op == 2:
 		try:
-			result = subprocess.check_output(["uptime"], text=True)
+			result = subprocess.check_output(["uptime"], universal_newlines=True)
 			return result.encode()
 		except subprocess.SubprocessError as e:
 			result = f"Error: {e}"
@@ -39,14 +39,14 @@ def perform_operation(op):
 
 	elif op == 3:
 		try:
-			result = subprocess.check_output(["free", "-h"], text=True)
+			result = subprocess.check_output(["free", "-h"], universal_newlines=True)
 			return result.encode()
 		except subprocess.SubprocessError as e:
 			result = f"Error: {e}"
 			return result.encode()
 	elif op == 4:
 		try:
-			result = subprocess.check_output(["netstat", "-tunlp"], text=True)
+			result = subprocess.check_output(["netstat", "-tunlp"], universal_newlines=True)
 			return result.encode()
 		except subprocess.SubprocessError as e:
 			result = f"Error: {e}"
@@ -54,14 +54,14 @@ def perform_operation(op):
 
 	elif op == 5:
 		try:
-			result = subprocess.check_output(["who"], text = True)
+			result = subprocess.check_output(["who"], universal_newlines=True)
 			return result.encode()
 		except subprocess.SubprocessError as e:
 			result = f"Error: {e}"
 			return result.encode()
 	elif op == 6:
 		try:
-			result = subprocess.check_output(["ps", "-ef"], text=True)
+			result = subprocess.check_output(["ps", "-ef"], universal_newlines=True)
 			return result.encode()
 		except subprocess.SubprocessError as e:
 			result = f"Error: {e}"
