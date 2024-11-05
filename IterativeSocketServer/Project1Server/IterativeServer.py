@@ -15,7 +15,7 @@ import socket
 import subprocess
 
 
-HOST = '139.62.210.154'
+# HOST = '139.62.210.154'
 # PORT = 2998
 
 
@@ -86,7 +86,7 @@ def spin_up():
 				connection_msg = 'Client successfully connected to Server'
 				client_socket.send(connection_msg.encode())
 
-				request = client_socket.recv(1024)
+				request = int(client_socket.recv(1024).decode())
 				if not request:
 					print("Client disconnected")
 					continue

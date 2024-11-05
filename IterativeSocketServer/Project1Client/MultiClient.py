@@ -23,7 +23,7 @@ def client_session(host, port, request, client_id, results):
         # clock the time when this is session is started
         start_time = time.time()
         # send request to the server
-        s.send(request.encode())
+        s.send(str(request).encode())
 
         # receive the response from the server
         response = s.recv(1024)
