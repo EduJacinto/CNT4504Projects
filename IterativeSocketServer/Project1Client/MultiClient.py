@@ -20,18 +20,19 @@ def client_session(host, port, request, client_id, results):
         s = socket.socket()
         s.settimeout(5)
         s.connect((host, port))
-        print(f"Connected to server at host {host} and port {port}")
+        # print(f"Connected to server at host {host} and port {port}")
         # clock the time when this is session is started
         start_time = time.time()
         # send request to the server
-        s.send(str(request).encode())
+        s.sendall(str(request).encode())
+        # time.sleep(0.1)
 
         try:
             # receive the response from the server
-            response = s.recv(4096)
+            response = s.recv(4096).decode()
             end_time = time.time()
             if response:
-                print(f"client {client_id} received response from server:", response.decode())
+                print(f"client {client_id} received response from server: {response}")
             else:
                 print(f"Client{client_id} did not recieve a response from the server.")
 
@@ -51,10 +52,10 @@ def client_session(host, port, request, client_id, results):
 def client_request():
     host = input("Enter host IP: ")
     port = int( input("Specify which port to connect to: ") )
-    s = socket.socket()
-    s.connect((host, port))
-    print(f"Connected to Host: {host} via Port:{port}")
-    print(s.recv(1024))
+    # s = socket.socket()
+    # s.connect((host, port))
+    # print(f"Connected to Host: {host} via Port:{port}")
+    # print(s.recv(1024).decode())
 
     # continue collecting requests while true
     # request = 1
