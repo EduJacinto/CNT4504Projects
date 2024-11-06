@@ -32,18 +32,18 @@ def client_session(host, port, request, client_id, results):
             response = s.recv(4096).decode()
             end_time = time.time()
             if response:
-                print(f"client {client_id} received response from server:\n{response}")
+                print(f"\nclient {client_id} received response from server:\n{response}")
             else:
-                print(f"Client{client_id} did not recieve a response from the server.")
+                print(f"\nClient{client_id} did not recieve a response from the server.")
 
             turnaround_time = end_time - start_time
             results.append(turnaround_time)
 
         except socket.timeout:
-            print(f"Client {client_id} timed out waiting for server")
+            print(f"\nClient {client_id} timed out waiting for server")
 
     except socket.gaierror as e:
-        print(f"Client {client_id} encountered Error: {e}")
+        print(f"\nClient {client_id} encountered Error: {e}")
 
     finally:
         s.close()
@@ -73,19 +73,28 @@ def client_request():
                 print("Invalid request")
         # if request is 7 finish program
         if request == 7:
-            print("Program exiting...")
+            print("\nShutting down server...")
+            try:
+                s = socket.socket()
+                s.connect((host, port))
+                s.sendall(str(request).encode())
+            except socket.timeout:
+                print("\nTimeout error")
+            finally:
+                s.close()
+            print("\nProgram exiting...")
             # maybe also make the server shut off
             return
 
         # continue prompting for number of clients to spawn while number is invalid
         while True:
             try:
-                client_numbers = int(input("How many clients would you like to spawn:\n1,5, 10, 15, 20, or 25\n"))
+                client_numbers = int(input("\nHow many clients would you like to spawn:\n1,5, 10, 15, 20, or 25\n"))
                 # if valid num clients break out of the loop and continue
                 if client_numbers in (1, 5, 10, 15, 20, 25):
                     break
             except ValueError: # catch and recover if request not in set of acceptable values
-                print("Invalid number of clients")
+                print("\nInvalid number of clients")
         # END COLLECTING REQUEST PARAMETERS
         # thread will collect thread objects and results will collect the turn around time of each thread
         threads = []
@@ -102,14 +111,14 @@ def client_request():
             thread.join()
 
         # print turn around time and other turnaround time stats
-        print("Printing turn around time for each client:")
+        print("\nPrinting turn around time for each client:")
         for result in results:
             print(result)
 
         total_turnaround_time = sum(results)
         avg_turnaround_time = total_turnaround_time / client_numbers
-        print(f"Total turnaround time for {client_numbers} clients is: {total_turnaround_time:.2f} seconds")
-        print(f"Average turnaround time is: {avg_turnaround_time:.2f} seconds")
+        print(f"\nTotal turnaround time for {client_numbers} clients is: {total_turnaround_time:.2f} seconds")
+        print(f"\nAverage turnaround time is: {avg_turnaround_time:.2f} seconds\n")
 
 
 if __name__ == "__main__":

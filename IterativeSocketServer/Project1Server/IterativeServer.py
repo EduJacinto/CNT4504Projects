@@ -94,7 +94,14 @@ def spin_up():
 
 				try:
 					op = int(request.decode())
-					print(f"Received operation request: {op}")
+					print(f"\nReceived operation request: {op}")
+					
+					if op == 7:
+						s.shutdown(socket.SHUT_RDWR)
+						s.close()
+						print("\nServer no longer listening. Shutting down...")
+						return
+					
 					response = perform_operation(op)
 				except ValueError:
 					response = "Invalid request format".encode()
@@ -102,7 +109,7 @@ def spin_up():
 
 				try:
 					client_socket.sendall(response)
-					print("Response sent to the client")
+					print("\nResponse sent to the client")
 				except BrokenPipeError as bp:
 					print(f"Broken Pipe Error: Client {client_address} disconnected before response sent")
 
