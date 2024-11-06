@@ -6,47 +6,59 @@
 # Turn-around Time - elapsed time for each client request
 # Total turn-around time - the sum of the turn-around times for all of the client requests
 # Average turn-around time - total turn-around time divided by number of client requests
-# for testing purposes
+# for testing purposes, again
 import socket
 import threading
 import time
 
-HOST = '139.62.210.155'
+# HOST = '139.62.210.155'
 
 
-def client_session(port, request, client_id, results):
+def client_session(host, port, request, client_id, results):
     try:
         # create the socket for each client
         s = socket.socket()
-        s.connect((HOST, port))
-        print(f"Connected to server at host {HOST} and port {port}")
+        s.settimeout(5)
+        s.connect((host, port))
+        # print(f"Connected to server at host {host} and port {port}")
         # clock the time when this is session is started
         start_time = time.time()
         # send request to the server
-        s.send(request.encode())
+        s.sendall(str(request).encode())
+        # time.sleep(0.1)
 
-        # receive the response from the server
-        response = s.recv(1024)
-        end_time = time.time()
-        print("client received response from server")
-        turnaround_time = end_time - start_time
-        results.append(turnaround_time)
+        try:
+            # receive the response from the server
+            response = s.recv(4096).decode()
+            end_time = time.time()
+            if response:
+                print(f"client {client_id} received response from server:\n{response}")
+            else:
+                print(f"Client{client_id} did not recieve a response from the server.")
+
+            turnaround_time = end_time - start_time
+            results.append(turnaround_time)
+
+        except socket.timeout:
+            print(f"Client {client_id} timed out waiting for server")
 
     except socket.gaierror as e:
         print(f"Client {client_id} encountered Error: {e}")
+
     finally:
         s.close()
 
 
 def client_request():
-    port = input("Specify which port to connect to: ")
+    host = input("Enter host IP: ")
+    port = int( input("Specify which port to connect to: ") )
     # s = socket.socket()
-    # s.connect((HOST, port))
-    # print("Connected to Host: {HOST} via Port:{port}")
-    # print(s.recv(1024))
+    # s.connect((host, port))
+    # print(f"Connected to Host: {host} via Port:{port}")
+    # print(s.recv(1024).decode())
 
     # continue collecting requests while true
-    request = 1
+    # request = 1
     while True:
         # continue prompting for request while request is invalid
         while True:
@@ -57,11 +69,12 @@ def client_request():
 
                 if request in (1, 2, 3, 4, 5, 6, 7):
                     break
-            except ValueError:
+            except ValueError: # if not in set of acceptable values, catch the error and recover, print error message
                 print("Invalid request")
         # if request is 7 finish program
         if request == 7:
             print("Program exiting...")
+            # maybe also make the server shut off
             return
 
         # continue prompting for number of clients to spawn while number is invalid
@@ -71,7 +84,7 @@ def client_request():
                 # if valid num clients break out of the loop and continue
                 if client_numbers in (1, 5, 10, 15, 20, 25):
                     break
-            except ValueError:
+            except ValueError: # catch and recover if request not in set of acceptable values
                 print("Invalid number of clients")
         # END COLLECTING REQUEST PARAMETERS
         # thread will collect thread objects and results will collect the turn around time of each thread
@@ -81,7 +94,7 @@ def client_request():
         # create a new thread for each client
         for i in range(client_numbers):
             # this is where each thread is sent to the above function and thus to the server
-            thread = threading.Thread(target=client_session, args=(port, request, i+1, results))
+            thread = threading.Thread(target=client_session, args=(host, port, request, i+1, results))
             threads.append(thread)
             thread.start()
         # make the program wait for all the threads to finish

@@ -15,54 +15,55 @@ import socket
 import subprocess
 
 
-HOST = '139.62.210.154'
+# HOST = '139.62.210.154'
 # PORT = 2998
 
 
 def perform_operation(op):
-	result = ""
+	result = ''
 	if op == 1:
 		try:
-			result = subprocess.check_output(["date"], text=True)
-			return result.encode()
+			# result = subprocess.check_output(["date"], universal_newlines=True)
+			result = subprocess.run(['date'], stdout=subprocess.PIPE)
+			return result.stdout
 		except subprocess.SubprocessError as e:
-			result = f"Error: {e}"
+			result = f'Error: {e}'
 			return result.encode()
 
 	elif op == 2:
 		try:
-			result = subprocess.check_output(["uptime"], text=True)
-			return result.encode()
+			result = subprocess.run(['uptime'], stdout=subprocess.PIPE)
+			return result.stdout
 		except subprocess.SubprocessError as e:
 			result = f"Error: {e}"
 			return result.encode()
 
 	elif op == 3:
 		try:
-			result = subprocess.check_output(["free", "-h"], text=True)
-			return result.encode()
+			result = subprocess.run(['free', '-h'], stdout=subprocess.PIPE)
+			return result.stdout
 		except subprocess.SubprocessError as e:
 			result = f"Error: {e}"
 			return result.encode()
 	elif op == 4:
 		try:
-			result = subprocess.check_output(["netstat", "-tunlp"], text=True)
-			return result.encode()
+			result = subprocess.run(['netstat', '-tunlp'], stdout=subprocess.PIPE)
+			return result.stdout
 		except subprocess.SubprocessError as e:
 			result = f"Error: {e}"
 			return result.encode()
 
 	elif op == 5:
 		try:
-			result = subprocess.check_output(["who"], text = True)
-			return result.encode()
+			result = subprocess.run(['who'], stdout=subprocess.PIPE)
+			return result.stdout
 		except subprocess.SubprocessError as e:
 			result = f"Error: {e}"
 			return result.encode()
 	elif op == 6:
 		try:
-			result = subprocess.check_output(["ps", "-ef"], text=True)
-			return result.encode()
+			result = subprocess.run(['ps', '-ef'], stdout=subprocess.PIPE)
+			return result.stdout
 		except subprocess.SubprocessError as e:
 			result = f"Error: {e}"
 			return result.encode()
@@ -70,31 +71,41 @@ def perform_operation(op):
 		return "invalid request".encode()
 
 
-def spin_server():
+def spin_up():
 	with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-		s.bind((HOST, ''))
-		print(f"socket bound to {HOST}")
+		s.bind(('0.0.0.0', 2998))
+		print(f"socket bound to port {2998}")
 		s.listen(25)
-		print(f"server listening to Host:{HOST}")
+		# host_address = socket.gethostbyname(socket.gethostname())
 
 		while True:
-			print("Waiting for connection request")
 			client_socket, client_address = s.accept()
-
+			print(f"Connection from:{client_address}")
+			
 			with client_socket:
-				print(f"connection from:{client_address}")
-				connection_msg = 'Client successfully connected to Server'
-				client_socket.send(connection_msg.encode())
-
+				# connection_msg = 'Client successfully connected to Server'
+				# client_socket.sendall(connection_msg.encode())
 				request = client_socket.recv(1024)
+				# print(f"Received request {request.decode()}")
+
 				if not request:
 					print("Client disconnected")
 					continue
 
-				response = perform_operation(request)
-				client_socket.sendall(response)
+				try:
+					op = int(request.decode())
+					print(f"Received operation request: {op}")
+					response = perform_operation(op)
+				except ValueError:
+					response = "Invalid request format".encode()
+					print("Received invalid request format")
 
+				try:
+					client_socket.sendall(response)
+					print("Response sent to the client")
+				except BrokenPipeError as bp:
+					print(f"Broken Pipe Error: Client {client_address} disconnected before response sent")
 
 if __name__ == "__main__":
-	spin_server()
+	spin_up()
 
