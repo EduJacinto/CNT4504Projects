@@ -33,7 +33,7 @@ def perform_operation(op):
 	elif op == 2:
 		try:
 			result = subprocess.run(['uptime'], stdout=subprocess.PIPE)
-			return result.encode()
+			return result.stdout
 		except subprocess.SubprocessError as e:
 			result = f"Error: {e}"
 			return result.encode()
@@ -41,14 +41,14 @@ def perform_operation(op):
 	elif op == 3:
 		try:
 			result = subprocess.run(['free', '-h'], stdout=subprocess.PIPE)
-			return result.encode()
+			return result.stdout
 		except subprocess.SubprocessError as e:
 			result = f"Error: {e}"
 			return result.encode()
 	elif op == 4:
 		try:
 			result = subprocess.run(['netstat', '-tunlp'], stdout=subprocess.PIPE)
-			return result.encode()
+			return result.stdout
 		except subprocess.SubprocessError as e:
 			result = f"Error: {e}"
 			return result.encode()
@@ -56,14 +56,14 @@ def perform_operation(op):
 	elif op == 5:
 		try:
 			result = subprocess.run(['who'], stdout=subprocess.PIPE)
-			return result.encode()
+			return result.stdout
 		except subprocess.SubprocessError as e:
 			result = f"Error: {e}"
 			return result.encode()
 	elif op == 6:
 		try:
 			result = subprocess.run(['ps', '-ef'], stdout=subprocess.PIPE)
-			return result.encode()
+			return result.stdout
 		except subprocess.SubprocessError as e:
 			result = f"Error: {e}"
 			return result.encode()

@@ -32,7 +32,7 @@ def client_session(host, port, request, client_id, results):
             response = s.recv(4096).decode()
             end_time = time.time()
             if response:
-                print(f"client {client_id} received response from server: {response}")
+                print(f"client {client_id} received response from server:\n{response}")
             else:
                 print(f"Client{client_id} did not recieve a response from the server.")
 
@@ -74,6 +74,7 @@ def client_request():
         # if request is 7 finish program
         if request == 7:
             print("Program exiting...")
+            # maybe also make the server shut off
             return
 
         # continue prompting for number of clients to spawn while number is invalid
