@@ -6,13 +6,9 @@
 # Turn-around Time - elapsed time for each client request
 # Total turn-around time - the sum of the turn-around times for all of the client requests
 # Average turn-around time - total turn-around time divided by number of client requests
-# for testing purposes, again
 import socket
 import threading
 import time
-
-# HOST = '139.62.210.155'
-
 
 def client_session(host, port, request, client_id, results):
     try:
@@ -20,12 +16,10 @@ def client_session(host, port, request, client_id, results):
         s = socket.socket()
         s.settimeout(5)
         s.connect((host, port))
-        # print(f"Connected to server at host {host} and port {port}")
         # clock the time when this is session is started
         start_time = time.time()
         # send request to the server
         s.sendall(str(request).encode())
-        # time.sleep(0.1)
 
         try:
             # receive the response from the server
@@ -52,13 +46,8 @@ def client_session(host, port, request, client_id, results):
 def client_request():
     host = input("Enter host IP: ")
     port = int( input("Specify which port to connect to: ") )
-    # s = socket.socket()
-    # s.connect((host, port))
-    # print(f"Connected to Host: {host} via Port:{port}")
-    # print(s.recv(1024).decode())
 
     # continue collecting requests while true
-    # request = 1
     while True:
         # continue prompting for request while request is invalid
         while True:
@@ -71,7 +60,7 @@ def client_request():
                     break
             except ValueError: # if not in set of acceptable values, catch the error and recover, print error message
                 print("Invalid request")
-        # if request is 7 finish program
+        # if request is 7 close program
         if request == 7:
             print("\nShutting down server...")
             try:
@@ -83,7 +72,6 @@ def client_request():
             finally:
                 s.close()
             print("\nProgram exiting...")
-            # maybe also make the server shut off
             return
 
         # continue prompting for number of clients to spawn while number is invalid
