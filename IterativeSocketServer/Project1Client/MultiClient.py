@@ -77,7 +77,7 @@ def client_request():
         # continue prompting for number of clients to spawn while number is invalid
         while True:
             try:
-                client_numbers = int(input("\nHow many clients would you like to spawn:\n1,5, 10, 15, 20, or 25\n"))
+                client_numbers = int(input("\nHow many clients would you like to spawn:\n1, 5, 10, 15, 20, or 25\n"))
                 # if valid num clients break out of the loop and continue
                 if client_numbers in (1, 5, 10, 15, 20, 25):
                     break
@@ -106,7 +106,7 @@ def client_request():
         total_turnaround_time = sum(results)
         avg_turnaround_time = total_turnaround_time / client_numbers
         print(f"\nTotal turnaround time for {client_numbers} clients is: {total_turnaround_time:.2f} seconds")
-        print(f"\nAverage turnaround time is: {avg_turnaround_time:.2f} seconds\n")
+        print(f"\nAverage turnaround time for {client_numbers} clients is: {avg_turnaround_time:.2f} seconds\n")
 
 
 if __name__ == "__main__":
