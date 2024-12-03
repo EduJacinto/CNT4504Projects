@@ -69,9 +69,9 @@ def client_request():
         # continue prompting for number of clients to spawn while number is invalid
         while True:
             try:
-                client_numbers = int(input("\nHow many clients would you like to spawn:\n1, 5, 10, 15, 20, or 25\n"))
+                client_numbers = int(input("\nHow many clients would you like to spawn:\n1, 5, 10, 15, 20, 25, or 100\n"))
                 # if valid num clients break out of the loop and continue
-                if client_numbers in (1, 5, 10, 15, 20, 25):
+                if client_numbers in (1, 5, 10, 15, 20, 25, 100):
                     break
             except ValueError: # catch and recover if request not in set of acceptable values
                 print("\nInvalid number of clients")
