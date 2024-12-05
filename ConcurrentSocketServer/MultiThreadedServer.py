@@ -57,6 +57,7 @@ def handle_client(client_socket, client_address):
     print(f"Connection established with {client_address}")
     with client_socket:  
         while True:
+            # I BELIEVE THIS IS THE CODE THAT IS PRODUCING THE ERROR EITHER LINE 63 OR LINE 74
             try:
                 
                 request = client_socket.recv(1024).decode().strip()
