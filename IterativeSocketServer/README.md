@@ -1,3 +1,3 @@
 # IterativeSocketServer
-# Multi-threaded Client
-# python3
+  Both of these projects were designed to communicate on the University of North Florida servers. Hence, IP addresses found in the code will not work unless you have UNF credentials, and are on VPN connection to the servers. The iterative socket server is a a single-threaded implementation that iteratively works through the number of requests sent from the client-side code and returns requests one by one. 
+  Basic UNIX commands can be sent as requests to the server and the server will run subprocesses and return the corresponding data to the client. The client will print data and statistics such as turnaround time, and average turnaround time. The client will present the user with a menu of options until the user chooses the quit option. Then, the client will send a shutdown command to the server and both the server code and the client connection will shutdown, terminating the session.
